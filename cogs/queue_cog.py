@@ -1,4 +1,3 @@
-import json
 import time
 
 from discord import Interaction
