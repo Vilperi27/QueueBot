@@ -1,1 +1,14 @@
-{"201768152982487041": {"mention": "<@201768152982487041>", "timezone": "Europe/Helsinki"}}
+{
+    "201768152982487041": {
+        "mention": "<@201768152982487041>", 
+        "timezone": "Europe/Helsinki"
+    },
+    "932698309133496360": {
+        "mention": "<@932698309133496360>", 
+        "timezone": "Europe/Amsterdam"
+    },
+    "734372583109033985": {
+        "mention": "<@734372583109033985>", 
+        "timezone": "Europe/Helsinki"
+    }
+}

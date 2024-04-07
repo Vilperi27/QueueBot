@@ -2,6 +2,8 @@ import json
 from discord.ext import commands
 import pytz
 
+from active_context import is_admin, read_json_data, write_json_data
+
 class RegisterCog(commands.Cog):
 
     def __init__(self, client):
@@ -15,10 +17,8 @@ class RegisterCog(commands.Cog):
             await ctx.send(
                 f'Timezone in wrong or in the wrong format, see the available formats in {info_url} within the **TZ identifier** column\nFor example !register Europe/Helsinki'
             )
-        else:     
-            with open('users.json', 'r') as file:
-                users = json.load(file)
-
+        else:
+            users = await read_json_data('users.json')
             author = ctx.message.author
 
             if str(author.id) in users.keys():
@@ -30,20 +30,16 @@ class RegisterCog(commands.Cog):
                     {"mention": author.mention, "timezone": user_timezone}
                 )
 
-            with open('users.json', 'w') as file:
-                json.dump(users, file)
-
+            await write_json_data('users.json', users)
             await ctx.send(f"{author.mention} was registered!")
 
+    @commands.check(is_admin)
     @commands.command()
     async def remove_user(self, ctx, id):
-        with open('users.json', 'r') as file:
-            users = json.load(file)
-
+        users = await read_json_data('users.json')
         del users[str(id)]
-        with open('users.json', 'w') as file:
-            json.dump(users, file)
 
+        await write_json_data('users.json', users)
         await ctx.send(f"User with id {id} was removed.")
 
 

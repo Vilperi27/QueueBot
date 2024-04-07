@@ -13,15 +13,6 @@ intents = bot_intents.get_bot_intents()
 client.remove_command("help")
 client.remove_command("register")
 
-@client.event
-async def on_command_error(ctx, error):
-    print(error)
-    print(error.__traceback__)
-    import logging
-    _logger = logging.getLogger(__name__.split(".")[0])
-    _logger.error("error", exc_info=error)
-    print("-" * 20)
-
 async def load_extensions():
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
