@@ -17,6 +17,3 @@ async def read_json_data(json_file):
 async def write_json_data(json_file, data):
     with open(json_file, 'w') as file:
         json.dump(data, file)
-
-async def is_admin(ctx):
-    return ctx.author.guild_permissions.administrator

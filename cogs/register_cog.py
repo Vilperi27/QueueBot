@@ -2,7 +2,7 @@ import json
 from discord.ext import commands
 import pytz
 
-from active_context import is_admin, read_json_data, write_json_data
+from active_context import read_json_data, write_json_data
 
 class RegisterCog(commands.Cog):
 
@@ -33,7 +33,7 @@ class RegisterCog(commands.Cog):
             await write_json_data('users.json', users)
             await ctx.send(f"{author.mention} was registered!")
 
-    @commands.check(is_admin)
+    @commands.has_permissions(administrator=True)
     @commands.command()
     async def remove_user(self, ctx, id):
         users = await read_json_data('users.json')

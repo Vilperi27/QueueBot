@@ -7,7 +7,7 @@ import discord.utils as discord_utils
 import datetime
 import pytz
 
-from active_context import command_prefix, is_admin, queue_names, team_channels, read_json_data, write_json_data
+from active_context import command_prefix, queue_names, team_channels, read_json_data, write_json_data
 from embeds import get_queue_embed
 from views import QueueButtons
 
@@ -19,17 +19,15 @@ class QueueCog(commands.Cog):
         self.client = client
         self.clear_queues_task.start()
 
-    async def remove_roles(self, ctx=None, id=None):
-        guild = ctx.message.guild
-        csgo_now_role = discord_utils.get(guild.roles, name="CSGO Now")
-        csgo_later_role = discord_utils.get(guild.roles, name="CSGO Later")
-        roles = [csgo_now_role, csgo_later_role]
+    async def remove_roles(self):
+        for guild in self.client.guilds:
+            csgo_now_role = discord_utils.get(guild.roles, name="CSGO Now")
+            csgo_later_role = discord_utils.get(guild.roles, name="CSGO Later")
+            roles = [csgo_now_role, csgo_later_role]
 
-        for role in roles:
-            if id:
-                await self.client.get_user(int(id)).remove_roles(ctx)
-            else:
-                await ctx.message.author.remove_roles(role)
+            for member in guild.members:
+                for role in roles:
+                    await member.remove_roles(role)
 
     async def display_queue(self, ctx, display_text=''):
         embed = await get_queue_embed(ctx)
@@ -45,7 +43,7 @@ class QueueCog(commands.Cog):
         for stack in queue_names:
             for user in queue[stack]:
                 user = user.replace('<', '').replace('>', '').replace('@', '')
-                await self.remove_roles(id=user)
+                await self.remove_roles()
 
         default_queue = {
             "stack": {},
@@ -62,13 +60,16 @@ class QueueCog(commands.Cog):
     async def clear_queues_task(self):
         await self.clear_queues()
 
-    @commands.check(is_admin)
+    @commands.has_permissions(administrator=True)
     @commands.command()
     async def clear_all_queues(self, ctx):
-        await self.clear_queues("Manual")
-        await ctx.send("Queues cleared")
+        try:
+            await self.clear_queues("Manual")
+            await ctx.send("Queues cleared")
+        except Exception as e:
+            print(e)
     
-    @commands.check(is_admin)
+    @commands.has_permissions(administrator=True)
     @commands.command()
     async def clear_queue(self, ctx, queue_name):
         queue = await read_json_data('queue.json')
@@ -179,10 +180,10 @@ class QueueCog(commands.Cog):
             return
         
         await write_json_data('queue.json', queues)     
-        await self.remove_roles(ctx)
+        await self.remove_roles()
         await self.display_queue(ctx)
 
-    @commands.check(is_admin)
+    @commands.has_permissions(administrator=True)
     @commands.command()
     async def remove(self, ctx, user):
         queues = await read_json_data('queue.json')
@@ -193,10 +194,10 @@ class QueueCog(commands.Cog):
                 del queues[queue_name][user_id]
         
         await write_json_data('queue.json', queues)
-        await self.remove_roles(ctx, user_id)
+        await self.remove_roles()
         await self.display_queue(ctx)
 
-    @commands.check(is_admin)
+    @commands.has_permissions(administrator=True)
     @commands.command()
     async def add(self, ctx, user, given_time=None):
         user_id = user.replace('<', '').replace('>', '').replace('@', '')
