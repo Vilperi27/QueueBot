@@ -13,12 +13,14 @@ intents = bot_intents.get_bot_intents()
 client.remove_command("help")
 client.remove_command("register")
 
+
 async def load_extensions():
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             await client.load_extension(f"cogs.{filename[:-3]}")
     print('Cogs loaded')
-            
+
+
 async def main():
     async with client:
         await load_extensions()

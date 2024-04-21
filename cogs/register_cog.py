@@ -3,6 +3,7 @@ import pytz
 
 from active_context import read_json_data, write_json_data
 
+
 class RegisterCog(commands.Cog):
 
     def __init__(self, client):

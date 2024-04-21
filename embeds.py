@@ -1,4 +1,3 @@
-import json
 import discord
 from active_context import command_prefix, team_channels, read_json_data
 

@@ -10,6 +10,7 @@ from active_context import command_prefix, queue_names, team_channels, read_json
 from embeds import get_queue_embed
 from views import QueueButtons
 
+
 class QueueCog(commands.Cog):
     offset = 2
     queue_clear_time = datetime.time(hour=4 + offset)

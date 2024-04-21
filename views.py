@@ -1,6 +1,7 @@
 import discord
 from discord.ui import View
 
+
 class QueueButtons(View):
     def __init__(self, *, timeout=180):
         super().__init__(timeout=timeout)

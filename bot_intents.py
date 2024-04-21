@@ -1,5 +1,6 @@
 import discord
 
+
 def get_bot_intents():
     intents = discord.Intents.default()
 

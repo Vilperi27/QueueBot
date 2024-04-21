@@ -3,6 +3,7 @@ from discord.ext import commands
 
 from active_context import command_prefix
 
+
 class HelpCog(commands.Cog):
 
     def __init__(self, client):
